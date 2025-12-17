@@ -19,8 +19,9 @@ st.warning('⚠️ This system is advisory only. Always consult a doctor.')
 # -----------------------------
 # USER INPUTS
 # -----------------------------
-drug = st.text_input('Drug name')
-condition = st.text_input('Medical condition')
+# Use selectboxes for drug and condition
+drug = st.selectbox('Select Drug', options=le_drug.classes_)
+condition = st.selectbox('Select Medical Condition', options=le_cond.classes_)
 side_effects = st.text_area('Describe side effects')
 
 # -----------------------------
@@ -36,14 +37,8 @@ if any(k in side_effects.lower() for k in emergency_keywords):
 # -----------------------------
 if st.button('Get Recommendation'):
     # Encode categorical features safely
-    try:
-        drug_enc = le_drug.transform([drug])[0]
-    except:
-        drug_enc = -1
-    try:
-        cond_enc = le_cond.transform([condition])[0]
-    except:
-        cond_enc = -1
+    drug_enc = le_drug.transform([drug])[0]
+    cond_enc = le_cond.transform([condition])[0]
 
     # TF-IDF vectorize side effects
     text_vec = vectorizer.transform([side_effects])
